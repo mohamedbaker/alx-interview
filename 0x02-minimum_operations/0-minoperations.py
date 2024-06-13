@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+'''
+    minimum operations task challenge.
+'''
+
 def minOperations(n):
     """
     Calculates the minimum number of operations (Copy All, Paste)

@@ -2,37 +2,45 @@
 '''
     minimum operations task challenge.
 '''
+import math
+
+
+def get_largest_factor(n):
+    """
+    Returns the largest factor of a number excluding the number itself.
+    """
+
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return n // i
+    return 1
+
 
 def minOperations(n):
     """
-    Calculates the minimum number of operations (Copy All, Paste)
-      needed to achieve n H characters.
-    Args:
-        n: The target number of H characters.
-    Returns:
-        int: The minimum number of operations required, or 0 if impossible.
+    Returns the minimum number of operations required to generate n consecutive
+    'H' characters using 'Copy All' and 'Paste' operations.
     """
-
-    if n <= 1:
-        return 0
 
     memo = {}
 
     def helper(n):
+        if n <= 1:
+            return 0
+
         if n in memo:
             return memo[n]
 
-        # Base case
-        if n == 1:
-            return 0
+        largest_factor = get_largest_factor(n)
 
-        min_ops = float('inf')
+        if largest_factor == 1:  # n is prime
+            memo[n] = n
+            return n
 
-        for i in range(2, n + 1):
-            if n % i == 0:
-                min_ops = min(min_ops, helper(n // i) + i)
+        # Calculate the number of operations required
+        result = (n // largest_factor) + helper(largest_factor)
+        memo[n] = result
 
-        memo[n] = min_ops
-        return min_ops
+        return result
 
     return helper(n)

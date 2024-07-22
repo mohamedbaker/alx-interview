@@ -34,34 +34,34 @@ def signal_handler(signum, frame):
 
 # Set up the signal handler for keyboard interruption
 signal.signal(signal.SIGINT, signal_handler)
+if __name__ == "__main__":
+    try:
+        for line in sys.stdin:
+            line_count += 1
+            parts = line.split()
 
-try:
-    for line in sys.stdin:
-        line_count += 1
-        parts = line.split()
+            if len(parts) < 7:
+                continue
 
-        if len(parts) < 7:
-            continue
+            # Extracting file size and status code
+            try:
+                file_size = int(parts[-1])
+                status_code = int(parts[-2])
+            except ValueError:
+                continue
 
-        # Extracting file size and status code
-        try:
-            file_size = int(parts[-1])
-            status_code = int(parts[-2])
-        except ValueError:
-            continue
+            total_file_size += file_size
 
-        total_file_size += file_size
+            if status_code in status_codes_count:
+                status_codes_count[status_code] += 1
 
-        if status_code in status_codes_count:
-            status_codes_count[status_code] += 1
+            # Print statistics after every 10 lines
+            if line_count % 10 == 0:
+                print_statistics()
 
-        # Print statistics after every 10 lines
-        if line_count % 10 == 0:
-            print_statistics()
-
-except KeyboardInterrupt:
-    print_statistics()
-    sys.exit(0)
+    except KeyboardInterrupt:
+        print_statistics()
+        sys.exit(0)
 
 # Print statistics at the end of the input
 print_statistics()
